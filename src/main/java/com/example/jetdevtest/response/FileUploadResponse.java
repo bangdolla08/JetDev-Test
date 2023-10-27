@@ -16,9 +16,7 @@ import lombok.NoArgsConstructor;
 @JsonSerialize
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class BaseResponse<T> {
-    @Builder.Default
-    private Boolean success = true;
-    private String message;
-    private T data;
+public class FileUploadResponse {
+    private String idFile;
+    private String fileName;
 }
