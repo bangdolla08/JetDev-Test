@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "file_library")
+@Table(name = "table_data")
 @Getter
 @Setter
 @Builder
@@ -35,9 +35,8 @@ public class TableData {
     @Column(name = "value")
     private String value;
 
-
     @ManyToOne
     @JoinColumn(name = "file_library_id")
-    private FileLibrary financialBranch;
+    private FileLibrary fileLibraryId;
 
 }

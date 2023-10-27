@@ -4,6 +4,7 @@ import com.example.jetdevtest.exception.NotAcceptableMediaException;
 import com.example.jetdevtest.response.BaseResponse;
 import com.example.jetdevtest.response.FileUploadResponse;
 import com.example.jetdevtest.service.FileService;
+import com.example.jetdevtest.service.UploadTableData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FileController {
     private final FileService fileService;
+    private final UploadTableData uploadTableData;
     private static final List<String> contentTypes = Arrays.asList("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             "text/csv",
             "application/vnd.ms-excel");
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public ResponseEntity<BaseResponse<FileUploadResponse>> custom(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<BaseResponse<FileUploadResponse>> uploadFile(@RequestParam("file") MultipartFile file) {
         String fileContentType = file.getContentType();
         if (!contentTypes.contains(fileContentType) || file.isEmpty()) {
             throw new NotAcceptableMediaException("wrong file in please enter the correct file");
