@@ -1,7 +1,10 @@
 package com.example.jetdevtest.service.impl;
 
+import com.example.jetdevtest.repository.FileLibraryRepository;
+import com.example.jetdevtest.repository.entity.FileLibrary;
 import com.example.jetdevtest.response.FileUploadResponse;
 import com.example.jetdevtest.service.FileService;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
@@ -15,17 +18,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
+
+    private final FileLibraryRepository fileLibraryRepository;
     Path rootLocation = Paths.get("local");
 
     @SneakyThrows
     @Override
     public FileUploadResponse fileUploadData(MultipartFile file) {
-
-
         try {
             String originalFilename = file.getOriginalFilename();
             String extension = FilenameUtils.getExtension(originalFilename);
@@ -37,6 +42,12 @@ public class FileServiceImpl implements FileService {
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, destinationFile,
                         StandardCopyOption.REPLACE_EXISTING);
+                FileLibrary build = FileLibrary.builder()
+                        .id(uuidFileUpload)
+                        .name(originalFilename)
+                        .createDate(LocalDateTime.now())
+                        .build();
+                fileLibraryRepository.save(build);
                 return FileUploadResponse.builder()
                         .idFile(uuidFileUpload)
                         .fileName(originalFilename)
